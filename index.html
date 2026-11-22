@@ -155,6 +155,9 @@ button { font: inherit; cursor: pointer; }
 .erledigt-titel { font-family: var(--schrift-titel); font-size: 22px; font-weight: 600; color: var(--salbei-tief); }
 .erledigt-titel::before { content: "✓"; display: block; font-size: 26px; line-height: 1; margin-bottom: 4px; }
 .erledigt-knoepfe { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.fahrplan-paar { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fahrplan-paar > div { min-width: 0; }
+@media (max-width: 520px) { .fahrplan-paar { grid-template-columns: 1fr; } }
 .fahrplan-rahmen { overflow-x: auto; }
 .fahrplan { width: 100%; border-collapse: collapse; background: var(--karte); border: 1px solid var(--linie); font-size: 14px; font-variant-numeric: tabular-nums; }
 .fahrplan th, .fahrplan td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--linie); vertical-align: top; }
@@ -237,7 +240,10 @@ button { font: inherit; cursor: pointer; }
   <section class="bus" id="busfahrplan">
     <h2 class="abschnitt">Hochzeitsbus</h2>
     <p class="hinweis">Der Bus holt euch an der Haltestelle ab und bringt euch nach der Feier wieder dorthin zurück. Wer mitfahren möchte, wählt bei der Rückmeldung für jede Person die Haltestelle aus. Bitte seid 5 Minuten vor der Abfahrt da.</p>
-    <div class="fahrplan-rahmen"><table class="fahrplan" id="fahrplan"></table></div>
+    <div class="fahrplan-paar">
+      <div class="fahrplan-rahmen"><p class="gang-titel">Hinfahrt · Samstag, 19. Juni</p><table class="fahrplan" id="fahrplan-hin"></table></div>
+      <div class="fahrplan-rahmen"><p class="gang-titel">Rückfahrt · in der Nacht</p><table class="fahrplan" id="fahrplan-rueck"></table></div>
+    </div>
   </section>
 
   <p class="fuss">Wir freuen uns auf euch</p>
@@ -540,10 +546,15 @@ document.getElementById("rueckmeldung").addEventListener("submit", async e => {
   }
 });
 
-document.getElementById("fahrplan").innerHTML =
-  `<thead><tr><th>Haltestelle</th><th>Abholung</th><th>Zurück an</th></tr></thead><tbody>` +
-  EINSTELLUNGEN.busHalte.map(h => `<tr><td>${h.ort}<small>${h.stelle}</small></td><td class="zeit">${h.hin}</td><td class="zeit">ca. ${h.rueck}</td></tr>`).join("") +
-  `<tr class="ziel"><td>Gut Altholz<small>Plattling</small></td><td class="zeit">an ${EINSTELLUNGEN.busAnkunft}</td><td class="zeit">ab ${EINSTELLUNGEN.busAbfahrt}</td></tr></tbody>`;
+const haltZeile = (h, zeit) => `<tr><td>${h.ort}<small>${h.stelle}</small></td><td class="zeit">${zeit}</td></tr>`;
+document.getElementById("fahrplan-hin").innerHTML =
+  `<thead><tr><th>Haltestelle</th><th>Abfahrt</th></tr></thead><tbody>` +
+  EINSTELLUNGEN.busHalte.map(h => haltZeile(h, h.hin)).join("") +
+  `<tr class="ziel"><td>Ankunft Gut Altholz</td><td class="zeit">${EINSTELLUNGEN.busAnkunft}</td></tr></tbody>`;
+document.getElementById("fahrplan-rueck").innerHTML =
+  `<thead><tr><th>Haltestelle</th><th>Ankunft</th></tr></thead><tbody>` +
+  `<tr class="ziel"><td>Abfahrt Gut Altholz</td><td class="zeit">${EINSTELLUNGEN.busAbfahrt}</td></tr>` +
+  [...EINSTELLUNGEN.busHalte].reverse().map(h => haltZeile(h, "ca. " + h.rueck)).join("") + `</tbody>`;
 document.getElementById("demo-hinweis").hidden = !!EINSTELLUNGEN.speicherUrl;
 personNeu();
 erledigtZeigen(gemerkt());
