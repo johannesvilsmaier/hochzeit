@@ -177,7 +177,7 @@ button { font: inherit; cursor: pointer; }
     <p class="ort">Gut Altholz · Plattling</p>
   </header>
 
-  <p class="einleitung">Wir freuen uns sehr, diesen Tag mit euch zu feiern.</p>
+  <p class="einleitung">Wir freuen uns sehr, diesen Tag mit euch zu feiern. Damit die Küche alles vorbereiten kann, sagt uns bitte, wer kommt und was ihr essen möchtet.</p>
   <p class="frist">Bitte gebt uns bis 31. März 2027 Rückmeldung</p>
 
   <section class="erledigt" id="erledigt" hidden aria-live="polite">
@@ -312,14 +312,14 @@ const EINSTELLUNGEN = {
   allergieChips: ["Gluten", "Laktose", "Nüsse", "Fisch", "Schalentiere", "Ei", "Vegetarisch", "Vegan"],
   // Fahrplan-Entwurf, siehe ../bus-fahrplan.md (Fahrzeiten OSRM/OpenStreetMap, Abfrage 21.11.2026)
   busHalte: [
-    { ort: "Gangkofen", stelle: "Duldplatz", hin: "12:15", rueck: "03:20" },
-    { ort: "Eggenfelden", stelle: "Busbahnhof", hin: "12:40", rueck: "03:00" },
-    { ort: "Ruhstorf", stelle: "Sportplatz", hin: "13:15", rueck: "02:25" },
-    { ort: "Malgersdorf", stelle: "Edeka-Markt", hin: "13:35", rueck: "02:10" },
-    { ort: "Haunersdorf", stelle: "Bürgerhaus", hin: "13:50", rueck: "01:55" }
+    { ort: "Gangkofen", stelle: "Duldplatz", hin: "12:35", rueck: "03:05" },
+    { ort: "Eggenfelden", stelle: "Busbahnhof", hin: "13:00", rueck: "02:45" },
+    { ort: "Ruhstorf", stelle: "Sportplatz", hin: "13:35", rueck: "02:10" },
+    { ort: "Malgersdorf", stelle: "Edeka-Markt", hin: "13:55", rueck: "01:55" },
+    { ort: "Haunersdorf", stelle: "Bushaltestelle", hin: "14:10", rueck: "01:40" }
   ],
-  busAnkunft: "ca. 14:30",
-  busAbfahrt: "01:15"
+  busAnkunft: "ca. 14:50",
+  busAbfahrt: "01:00"
 };
 /* ======================================= */
 
@@ -541,7 +541,7 @@ document.getElementById("rueckmeldung").addEventListener("submit", async e => {
 });
 
 document.getElementById("fahrplan").innerHTML =
-  `<thead><tr><th>Haltestelle</th><th>Hinfahrt</th><th>Rückfahrt</th></tr></thead><tbody>` +
+  `<thead><tr><th>Haltestelle</th><th>Abholung</th><th>Zurück an</th></tr></thead><tbody>` +
   EINSTELLUNGEN.busHalte.map(h => `<tr><td>${h.ort}<small>${h.stelle}</small></td><td class="zeit">${h.hin}</td><td class="zeit">ca. ${h.rueck}</td></tr>`).join("") +
   `<tr class="ziel"><td>Gut Altholz<small>Plattling</small></td><td class="zeit">an ${EINSTELLUNGEN.busAnkunft}</td><td class="zeit">ab ${EINSTELLUNGEN.busAbfahrt}</td></tr></tbody>`;
 document.getElementById("demo-hinweis").hidden = !!EINSTELLUNGEN.speicherUrl;
